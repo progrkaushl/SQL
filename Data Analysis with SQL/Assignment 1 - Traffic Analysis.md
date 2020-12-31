@@ -54,7 +54,7 @@ Which is not a proper breakdown nor does it provides complete picture.
 
 Lets first look into the **orders** table and see on which key we can do join to find orders count for each session.
 ~~~~sql
- SELECT * FROM orders LIMIT 5;
+SELECT * FROM orders LIMIT 5;
 ~~~~
 
 *website_session_id* is present in **orders** table so we can do join on it. Lets find out the session to order CVR for **gsearch nonbrand**.
