@@ -60,9 +60,9 @@ Lets first look into the **orders** table and see on which key we can do join to
 *website_session_id* is present in **orders** table so we can do join on it. Lets find out the session to order CVR for **gsearch nonbrand**.
 ~~~~sql
 SELECT
-    COUNT(website_sessions.website_session_id) AS sessions,
-    SUM(orders.items_purchased) AS orders,
-    (SUM(orders.items_purchased) / COUNT(website_sessions.website_session_id)) AS orders_per_session
+	COUNT(DISTINCT(website_sessions.website_session_id)) AS sessions,
+	COUNT(DISTINCT(orders.order_id)) AS orders,
+	(COUNT(DISTINCT(orders.order_id)) / COUNT(DISTINCT(website_sessions.website_session_id))) AS session_to_order_cvr
 FROM website_sessions
 LEFT JOIN orders ON  
 	website_sessions.website_session_id = orders.website_session_id
@@ -71,7 +71,7 @@ WHERE website_sessions.created_at < '2020-12-31'
 	AND website_sessions.utm_campaign = 'nonbrand'
 ;
 ~~~~
-From the results it is clear that **gsearch nonbrand** has 8.2% session to order conversion rate.
+From the results it is clear that **gsearch nonbrand** has 6.66% session to order conversion rate.
 
 Let's see the all non-null sources drilled down to campaign type by source to order conversion rate.
 
@@ -80,9 +80,9 @@ SELECT
 	website_sessions.utm_source AS utm_source,
 	website_sessions.utm_campaign AS utm_campaign,
 	website_sessions.http_referer AS http_referer,
-	COUNT(website_sessions.website_session_id) AS sessions,
-	SUM(orders.items_purchased) AS orders,
-	(SUM(orders.items_purchased) / COUNT(website_sessions.website_session_id)) AS orders_per_session
+	COUNT(DISTINCT(website_sessions.website_session_id)) AS sessions,
+	COUNT(DISTINCT(orders.order_id)) AS orders,
+	(COUNT(DISTINCT(orders.order_id)) / COUNT(DISTINCT(website_sessions.website_session_id))) AS session_to_order_cvr
 FROM website_sessions
 LEFT JOIN orders ON  
 	website_sessions.website_session_id = orders.website_session_id
@@ -94,7 +94,7 @@ GROUP BY
 ORDER BY orders_per_session DESC
 ~~~~
 
-As per results, **socialbook pilot** has CVR of 1.5%, rest have more than 4%. Bids should be reduced for **socialbook pilot**
+As per results, **socialbook pilot** has CVR of 1.08%, rest have more than 4%. Bids should be reduced for **socialbook pilot**
 
 
 
