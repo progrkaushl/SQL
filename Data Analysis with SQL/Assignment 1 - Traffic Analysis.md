@@ -68,7 +68,7 @@ LEFT JOIN orders ON
 	website_sessions.website_session_id = orders.website_session_id
 WHERE website_sessions.created_at < '2020-12-31'
 	AND website_sessions.utm_source = 'gsearch'
-    AND website_sessions.utm_campaign = 'nonbrand'
+	AND website_sessions.utm_campaign = 'nonbrand'
 ;
 ~~~~
 From the results it is clear that **gsearch nonbrand** has 8.2% session to order conversion rate.
@@ -78,11 +78,11 @@ Let's see the all non-null sources drilled down to campaign type by source to or
 ~~~~sql
 SELECT
 	website_sessions.utm_source AS utm_source,
-    website_sessions.utm_campaign AS utm_campaign,
-    website_sessions.http_referer AS http_referer,
-    COUNT(website_sessions.website_session_id) AS sessions,
-    SUM(orders.items_purchased) AS orders,
-    (SUM(orders.items_purchased) / COUNT(website_sessions.website_session_id)) AS orders_per_session
+	website_sessions.utm_campaign AS utm_campaign,
+	website_sessions.http_referer AS http_referer,
+	COUNT(website_sessions.website_session_id) AS sessions,
+	SUM(orders.items_purchased) AS orders,
+	(SUM(orders.items_purchased) / COUNT(website_sessions.website_session_id)) AS orders_per_session
 FROM website_sessions
 LEFT JOIN orders ON  
 	website_sessions.website_session_id = orders.website_session_id
