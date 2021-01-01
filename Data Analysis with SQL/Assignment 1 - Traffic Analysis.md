@@ -9,9 +9,9 @@ SHOW DATABASES;
 
 *Output :-*
 
-+--------------------+
+
 | Database           |
-+--------------------+
+|--------------------|
 | employees          |
 | information_schema |
 | mavenfuzzyfactory  |
@@ -37,16 +37,16 @@ SHOW TABLES;
 ~~~~
 
 *Output :-*
-+-----------------------------+
+
 | Tables_in_mavenfuzzyfactory |
-+-----------------------------+
+|-----------------------------|
 | order_item_refunds          |
 | order_items                 |
 | orders                      |
 | products                    |
 | website_pageviews           |
 | website_sessions            |
-+-----------------------------+
+
 
 ## *Test Skill* - Finding Traffic Sources
 
@@ -60,14 +60,14 @@ SELECT * FROM website_sessions LIMIT 5
 
 *Output :-*
 
-+--------------------+---------------------+---------+-------------------+------------+--------------+-------------+-------------+-------------------------+
+
 | website_session_id | created_at          | user_id | is_repeat_session | utm_source | utm_campaign | utm_content | device_type | http_referer            |
-+--------------------+---------------------+---------+-------------------+------------+--------------+-------------+-------------+-------------------------+
+|--------------------|---------------------|---------|-------------------|------------|--------------|-------------|-------------|-------------------------|
 |                  1 | 2012-03-19 08:04:16 |       1 |                 0 | gsearch    | nonbrand     | g_ad_1      | mobile      | https://www.gsearch.com |
 |                  2 | 2012-03-19 08:16:49 |       2 |                 0 | gsearch    | nonbrand     | g_ad_1      | desktop     | https://www.gsearch.com |
 |                  3 | 2012-03-19 08:26:55 |       3 |                 0 | gsearch    | nonbrand     | g_ad_1      | desktop     | https://www.gsearch.com |
 |                  4 | 2012-03-19 08:37:33 |       4 |                 0 | gsearch    | nonbrand     | g_ad_1      | desktop     | https://www.gsearch.com |
-|                  5 | 2012-03-19 09:00:55 |       5 |                 0 | gsearch    | nonbrand     | g_ad_1      | mobile      | https://www.gsearch.com |+--------------------+---------------------+---------+-------------------+------------+--------------+-------------+-------------+-------------------------+
+|                  5 | 2012-03-19 09:00:55 |       5 |                 0 | gsearch    | nonbrand     | g_ad_1      | mobile      | https://www.gsearch.com ||--------------------|---------------------|---------|-------------------|------------|--------------|-------------|-------------|-------------------------|
 
 We will use *utm_source*, *utm_campaign* and *http_referer* fields to find the traffic volume.
 ~~~~sql
@@ -85,16 +85,14 @@ ORDER BY sessions DESC;
 
 *Output :-*
 
-+------------+--------------+-------------------------+----------+
 | utm_source | utm_campaign | http_referer            | sessions |
-+------------+--------------+-------------------------+----------+
+|------------|--------------|-------------------------|----------|
 | gsearch    | nonbrand     | https://www.gsearch.com |     3613 |
 | NULL       | NULL         | NULL                    |       28 |
 | NULL       | NULL         | https://www.gsearch.com |       27 |
 | gsearch    | brand        | https://www.gsearch.com |       26 |
 | NULL       | NULL         | https://www.bsearch.com |        7 |
 | bsearch    | brand        | https://www.bsearch.com |        7 |
-+------------+--------------+-------------------------+----------+
 
 **gsearch nonbrand** has highest sessions, drill deeper into **gsearch nonbrand** campaign traffic to explore potential optimization opportunities. 
 
@@ -115,15 +113,13 @@ SELECT * FROM orders LIMIT 5;
 
 *Output :-*
 
-+----------+---------------------+--------------------+---------+--------------------+-----------------+-----------+----------+
 | order_id | created_at          | website_session_id | user_id | primary_product_id | items_purchased | price_usd | cogs_usd |
-+----------+---------------------+--------------------+---------+--------------------+-----------------+-----------+----------+
+|----------|---------------------|--------------------|---------|--------------------|-----------------|-----------|----------|
 |        1 | 2012-03-19 10:42:46 |                 20 |      20 |                  1 |               1 |     49.99 |    19.49 |
 |        2 | 2012-03-19 19:27:37 |                104 |     104 |                  1 |               1 |     49.99 |    19.49 |
 |        3 | 2012-03-20 06:44:45 |                147 |     147 |                  1 |               1 |     49.99 |    19.49 |
 |        4 | 2012-03-20 09:41:45 |                160 |     160 |                  1 |               1 |     49.99 |    19.49 |
 |        5 | 2012-03-20 11:28:15 |                177 |     177 |                  1 |               1 |     49.99 |    19.49 |
-+----------+---------------------+--------------------+---------+--------------------+-----------------+-----------+----------+
 
 *website_session_id* is present in **orders** table so we can do join on it. Lets find out the session to order CVR for **gsearch nonbrand**.
 ~~~~sql
@@ -142,11 +138,9 @@ WHERE website_sessions.created_at < '2012-04-12'
 
 *Output :-*
 
-+----------+--------+----------------------+
 | sessions | orders | session_to_order_cvr |
-+----------+--------+----------------------+
+|----------|--------|----------------------|
 |     3613 |    107 |               0.0296 |
-+----------+--------+----------------------+
 
 From the results it is clear that **gsearch nonbrand** has 2.96% session to order conversion rate.
 
@@ -174,13 +168,11 @@ ORDER BY orders_per_session DESC;
 
 *Output :-* 
 
-+------------+--------------+-------------------------+----------+--------+--------------------+
 | utm_source | utm_campaign | http_referer            | sessions | orders | orders_per_session |
-+------------+--------------+-------------------------+----------+--------+--------------------+
+|------------|--------------|-------------------------|----------|--------|--------------------|
 | gsearch    | brand        | https://www.gsearch.com |       26 |      2 |             0.0769 |
 | gsearch    | nonbrand     | https://www.gsearch.com |     3613 |    107 |             0.0296 |
 | bsearch    | brand        | https://www.bsearch.com |        7 |      0 |             0.0000 |
-+------------+--------------+-------------------------+----------+--------+--------------------+
 
 As per results, **bsearch brand** has CVR of 0% which is lowest.
 
@@ -223,9 +215,8 @@ ORDER BY week_start_date;
 
 *Output :-*
 
-+-----------------+----------+
 | week_start_date | sessions |
-+-----------------+----------+
+|-----------------|----------|
 | 2012-03-19      |      896 |
 | 2012-03-25      |      956 |
 | 2012-04-01      |     1152 |
@@ -234,7 +225,6 @@ ORDER BY week_start_date;
 | 2012-04-22      |      594 |
 | 2012-04-29      |      681 |
 | 2012-05-06      |      651 |
-+-----------------+----------+
 
 From the data it is evident that after bidding down **gsearch nonbrand**, session volume has decreased.
 
@@ -267,12 +257,10 @@ GROUP BY 1;
 
 *Output :-*
 
-+-------------+----------+--------+----------------------+
 | device_type | sessions | orders | session_to_order_cvr |
-+-------------+----------+--------+----------------------+
+|-------------|----------|--------|----------------------|
 | desktop     |     3986 |    148 |               0.0371 |
 | mobile      |     2548 |     24 |               0.0094 |
-+-------------+----------+--------+----------------------+
 
 From analysis it is clear that desktop has higher CVR than mobile.
 
@@ -319,9 +307,9 @@ ORDER BY 1;
 
 *Output :-*
 
-+-----------------+------------------+------------------+
+
 | week_start_date | desktop_sessions | desktop_sessions |
-+-----------------+------------------+------------------+
+|-----------------|------------------|------------------|
 | 2012-04-15      |              383 |              383 |
 | 2012-04-22      |              360 |              360 |
 | 2012-04-29      |              425 |              425 |
@@ -330,8 +318,8 @@ ORDER BY 1;
 | 2012-05-20      |              661 |              661 |
 | 2012-05-27      |              585 |              585 |
 | 2012-06-03      |              582 |              582 |
-+-----------------+------------------+------------------+
+
 
 Clearly desktop sessions has increased after bidding down.
-
-## End of Assignment 1
+_____________
+## End of Assignment - Traffic Analysis
