@@ -48,21 +48,21 @@ SHOW TABLES;
 
 ~~~~mysql
 SELECT 
-	YEAR(website_sessions.created_at) AS yr,
-	MONTH(website_sessions.created_at) AS mnth,
+    YEAR(website_sessions.created_at) AS yr,
+    MONTH(website_sessions.created_at) AS mnth,
     MONTHNAME(website_sessions.created_at) AS mnth_name,
     COUNT(DISTINCT(website_sessions.website_session_id)) AS sessions,
     COUNT(DISTINCT(orders.order_id)) AS orders
 FROM website_sessions
-	LEFT JOIN orders
-		ON website_sessions.website_session_id = orders.website_session_id
+    LEFT JOIN orders
+    ON website_sessions.website_session_id = orders.website_session_id
 WHERE website_sessions.utm_source = "gsearch" AND
 website_sessions.created_at <= '2012-11-27'
 GROUP BY 
-	yr,	
-	mnth
+    yr,
+    mnth
 ORDER BY 
-	mnth ASC
+    mnth ASC
 ;
 ~~~~
 
@@ -88,23 +88,23 @@ ORDER BY
 
 ~~~~mysql
 SELECT 
-	YEAR(website_sessions.created_at) AS yr,
-	MONTH(website_sessions.created_at) AS mnth,
+    YEAR(website_sessions.created_at) AS yr,
+    MONTH(website_sessions.created_at) AS mnth,
     MONTHNAME(website_sessions.created_at) AS mnth_name,
     COUNT(DISTINCT(CASE WHEN utm_campaign = "nonbrand" THEN website_sessions.website_session_id ELSE NULL END)) AS nonbrand_sessions,
     COUNT(DISTINCT(CASE WHEN utm_campaign = "brand" THEN orders.order_id ELSE NULL END)) AS brand_sessions,
     COUNT(DISTINCT(CASE WHEN utm_campaign = "nonbrand" THEN website_sessions.website_session_id ELSE NULL END)) AS nonbrand_orders,
     COUNT(DISTINCT(CASE WHEN utm_campaign = "brand" THEN orders.order_id ELSE NULL END)) AS brand_orders
 FROM website_sessions
-	LEFT JOIN orders
-		ON website_sessions.website_session_id = orders.website_session_id
+    LEFT JOIN orders
+        ON website_sessions.website_session_id = orders.website_session_id
 WHERE website_sessions.utm_source = "gsearch" AND
 website_sessions.created_at <= '2012-11-27'
 GROUP BY 
-	yr,	
-	mnth
+    yr,
+    mnth
 ORDER BY 
-	mnth ASC
+    mnth ASC
 ;
 ~~~~
 
@@ -130,24 +130,24 @@ ORDER BY
 
 ~~~~mysql
 SELECT 
-	YEAR(website_sessions.created_at) AS yr,
-	MONTH(website_sessions.created_at) AS mnth,
+    YEAR(website_sessions.created_at) AS yr,
+    MONTH(website_sessions.created_at) AS mnth,
     MONTHNAME(website_sessions.created_at) AS mnth_name,
     COUNT(DISTINCT(CASE WHEN website_sessions.device_type="mobile" THEN website_sessions.website_session_id ELSE NULL END)) AS mobile_sessions,
     COUNT(DISTINCT(CASE WHEN website_sessions.device_type="desktop" THEN website_sessions.website_session_id ELSE NULL END)) AS desktop_sessions,
     COUNT(DISTINCT(CASE WHEN website_sessions.device_type="mobile" THEN orders.order_id ELSE NULL END)) AS mobile_orders,
     COUNT(DISTINCT(CASE WHEN website_sessions.device_type="desktop" THEN orders.order_id ELSE NULL END)) AS desktop_orders
 FROM website_sessions
-	LEFT JOIN orders
-		ON website_sessions.website_session_id = orders.website_session_id
+    LEFT JOIN orders
+        ON website_sessions.website_session_id = orders.website_session_id
 WHERE website_sessions.utm_source = "gsearch" AND
 website_sessions.utm_campaign = "nonbrand" AND
 website_sessions.created_at <= '2012-11-27'
 GROUP BY 
-	yr,	
-	mnth
+    yr,
+    mnth
 ORDER BY 
-	mnth ASC
+    mnth ASC
 ;
 ~~~~
 
@@ -173,8 +173,8 @@ ORDER BY
 
 ~~~mysql
 SELECT 
-	YEAR(website_sessions.created_at) AS yr,
-	MONTH(website_sessions.created_at) AS mnth,
+    YEAR(website_sessions.created_at) AS yr,
+    MONTH(website_sessions.created_at) AS mnth,
     MONTHNAME(website_sessions.created_at) AS mnth_name,
     COUNT(DISTINCT(CASE WHEN website_sessions.utm_source="gsearch" THEN website_sessions.website_session_id ELSE NULL END)) AS gsearch_sessions,
     COUNT(DISTINCT(CASE WHEN website_sessions.utm_source="bsearch" THEN website_sessions.website_session_id ELSE NULL END)) AS bsearch_sessions,
@@ -182,15 +182,15 @@ SELECT
     COUNT(DISTINCT CASE WHEN utm_source IS NULL AND http_referer IS NOT NULL THEN website_sessions.website_session_id ELSE NULL END) AS referral_sessions,
     COUNT(DISTINCT CASE WHEN utm_source IS NULL AND http_referer IS NULL THEN website_sessions.website_session_id ELSE NULL END) AS organic_sessions
 FROM website_sessions
-	LEFT JOIN orders
-		ON website_sessions.website_session_id = orders.website_session_id
+    LEFT JOIN orders
+        ON website_sessions.website_session_id = orders.website_session_id
 WHERE 
 website_sessions.created_at <= '2012-11-27'
 GROUP BY 
-	yr,	
-	mnth
+    yr,
+    mnth
 ORDER BY 
-	mnth ASC
+    mnth ASC
 ;
 ~~~~
 
@@ -216,23 +216,23 @@ ORDER BY
 
 ~~~~mysql
 SELECT 
-	YEAR(website_sessions.created_at) AS yr,
-	MONTH(website_sessions.created_at) AS mnth,
+    YEAR(website_sessions.created_at) AS yr,
+    MONTH(website_sessions.created_at) AS mnth,
     MONTHNAME(website_sessions.created_at) AS mnth_name,
     COUNT(DISTINCT(website_sessions.website_session_id)) AS sessions,
     COUNT(DISTINCT(orders.order_id)) AS orders,
     (COUNT(DISTINCT(orders.order_id)) / 
     COUNT(DISTINCT(website_sessions.website_session_id))) AS session_order_cvr
 FROM website_sessions
-	LEFT JOIN orders
-		ON website_sessions.website_session_id = orders.website_session_id
+    LEFT JOIN orders
+        ON website_sessions.website_session_id = orders.website_session_id
 WHERE 
 website_sessions.created_at <= '2012-11-27'
 GROUP BY 
-	yr,	
-	mnth
+    yr,
+    mnth
 ORDER BY 
-	mnth ASC
+    mnth ASC
 LIMIT 8
 ;
 ~~~~
@@ -265,25 +265,25 @@ Then get the first pageview_id & pageview_url for each website_session_id after 
 ~~~~mysql
 CREATE TEMPORARY TABLE gsearch_nonbrand_firstPV
 SELECT 
-	website_sessions.website_session_id AS website_session_id,
-	MIN(website_pageviews.website_pageview_id) AS first_pv,
+    website_sessions.website_session_id AS website_session_id,
+    MIN(website_pageviews.website_pageview_id) AS first_pv,
     website_pageviews.pageview_url AS pv_url
 FROM website_pageviews
-	LEFT JOIN website_sessions
-		ON website_pageviews.website_session_id = website_sessions.website_session_id
+    LEFT JOIN website_sessions
+        ON website_pageviews.website_session_id = website_sessions.website_session_id
 WHERE website_pageviews.website_pageview_id >= (
     -- Find pageview_id when '/lander-1' was launched
-	SELECT
-		MIN(website_pageview_id) AS first_pv
-	FROM website_pageviews
-	WHERE pageview_url = "/lander-1"
+    SELECT
+        MIN(website_pageview_id) AS first_pv
+    FROM website_pageviews
+    WHERE pageview_url = "/lander-1"
 ) 
 AND website_sessions.created_at < '2012-07-28' 
 AND website_sessions.utm_source = "gsearch" 
 AND website_sessions.utm_campaign = "nonbrand" 
 AND website_pageviews.pageview_url IN ('/home', '/lander-1')
 GROUP BY
-	website_sessions.website_session_id
+    website_sessions.website_session_id
 ;
 ~~~~
 
@@ -306,12 +306,12 @@ Get the order_id for each website_sesson_id in temporary table **gsearch_nonbran
 ~~~~mysql
 CREATE TEMPORARY TABLE gsearch_nonbrand_firstPV_w_orderId
 SELECT 
-	gsearch_nonbrand_firstPV.website_session_id AS website_session_id,
+    gsearch_nonbrand_firstPV.website_session_id AS website_session_id,
     gsearch_nonbrand_firstPV.pv_url AS pv_url,
     orders.order_id AS order_id
 FROM gsearch_nonbrand_firstPV
-	LEFT JOIN orders
-		ON gsearch_nonbrand_firstPV.website_session_id = orders.website_session_id
+    LEFT JOIN orders
+        ON gsearch_nonbrand_firstPV.website_session_id = orders.website_session_id
 ;
 ~~~~
 
@@ -333,7 +333,7 @@ Get the number of sessions, orders and CVR for each pageview_url from temporary 
 
 ~~~~mysql
 SELECT
-	pv_url, 
+    pv_url, 
     COUNT(DISTINCT website_session_id) AS sessions, 
     COUNT(DISTINCT order_id) AS orders,
     COUNT(DISTINCT order_id)/COUNT(DISTINCT website_session_id) AS conv_rate
@@ -351,23 +351,23 @@ GROUP BY pv_url
 
 ~~~~mysql
 SELECT 
-	COUNT(website_session_id) AS sessions_since_test
+    COUNT(website_session_id) AS sessions_since_test
 FROM website_sessions
 WHERE created_at < '2012-11-27'
-	AND website_session_id > (
-		--  most recent pageview for gsearch nonbrand where the traffic was sent to /home
-		SELECT 
-			MAX(website_sessions.website_session_id) AS most_recent_gsearch_nonbrand_home_pageview 
-		FROM website_sessions 
-			LEFT JOIN website_pageviews 
-				ON website_pageviews.website_session_id = website_sessions.website_session_id
-		WHERE utm_source = 'gsearch'
-			AND utm_campaign = 'nonbrand'
-			AND pageview_url = '/home'
-			AND website_sessions.created_at < '2012-11-27'
+    AND website_session_id > (
+        --  most recent pageview for gsearch nonbrand where the traffic was sent to /home
+        SELECT 
+            MAX(website_sessions.website_session_id) AS most_recent_gsearch_nonbrand_home_pageview 
+        FROM website_sessions 
+            LEFT JOIN website_pageviews 
+                ON website_pageviews.website_session_id = website_sessions.website_session_id
+        WHERE utm_source = 'gsearch'
+            AND utm_campaign = 'nonbrand'
+            AND pageview_url = '/home'
+            AND website_sessions.created_at < '2012-11-27'
     )
-	AND utm_source = 'gsearch'
-	AND utm_campaign = 'nonbrand'
+    AND utm_source = 'gsearch'
+    AND utm_campaign = 'nonbrand'
 ;
 ~~~~
 
@@ -390,9 +390,9 @@ Check clicks on each pages for each session id
 ~~~~mysql
 CREATE TEMPORARY TABLE pageview_level_clk
 SELECT 
-	website_sessions.website_session_id AS website_session_id, 
+    website_sessions.website_session_id AS website_session_id, 
     website_pageviews.pageview_url AS pageview_url,
-	CASE WHEN website_pageviews.pageview_url = '/home' THEN 1 ELSE 0 END AS homepage,
+    CASE WHEN website_pageviews.pageview_url = '/home' THEN 1 ELSE 0 END AS homepage,
     CASE WHEN website_pageviews.pageview_url = '/lander-1' THEN 1 ELSE 0 END AS test_lander,
     CASE WHEN website_pageviews.pageview_url = '/products' THEN 1 ELSE 0 END AS products,
     CASE WHEN website_pageviews.pageview_url = '/the-original-mr-fuzzy' THEN 1 ELSE 0 END AS mrfuzzy,
@@ -401,14 +401,14 @@ SELECT
     CASE WHEN website_pageviews.pageview_url = '/billing' THEN 1 ELSE 0 END AS billing,
     CASE WHEN website_pageviews.pageview_url = '/thank-you-for-your-order' THEN 1 ELSE 0 END AS thankyou
 FROM website_sessions
-	LEFT JOIN website_pageviews
-		ON website_sessions.website_session_id = website_pageviews.website_session_id
+    LEFT JOIN website_pageviews
+        ON website_sessions.website_session_id = website_pageviews.website_session_id
 WHERE website_sessions.utm_source = 'gsearch' 
-	AND website_sessions.utm_campaign = 'nonbrand' 
+    AND website_sessions.utm_campaign = 'nonbrand' 
     AND website_sessions.created_at < '2012-07-28'
     AND website_sessions.created_at > '2012-06-19'
 ORDER BY 
-	website_sessions.website_session_id,
+    website_sessions.website_session_id,
     website_pageviews.created_at
 ;
 ~~~~
@@ -430,8 +430,8 @@ SELECT * FROM pageview_level_clk LIMIT 5;
 ~~~~mysql
 CREATE TEMPORARY TABLE session_level_clk
 SELECT 
-	website_session_id,
-	MAX(homepage) AS homepage_clk,
+    website_session_id,
+    MAX(homepage) AS homepage_clk,
     MAX(test_lander) AS test_lander_clk,
     MAX(products) AS products_clk,
     MAX(mrfuzzy) AS mrfuzzy_clk,
@@ -460,10 +460,10 @@ SELECT * FROM session_level_clk LIMIT 5;
 
 ~~~~mysql
 SELECT 
-	CASE 
-		WHEN homepage_clk = 1 THEN 'saw_homepage'
-		WHEN test_lander_clk = 1 THEN 'saw_test_lander'
-		ELSE 'error' 
+    CASE 
+        WHEN homepage_clk = 1 THEN 'saw_homepage'
+        WHEN test_lander_clk = 1 THEN 'saw_test_lander'
+        ELSE 'error' 
     END AS segment,
     COUNT(DISTINCT website_session_id) AS sessions,
     COUNT(DISTINCT CASE WHEN products_clk = 1 THEN website_session_id ELSE NULL END) AS to_products,
@@ -494,23 +494,23 @@ Get the billing page version and price for each session and order and then ratio
 
 ~~~~mysql
 SELECT
-	billing_version_seen, 
+    billing_version_seen, 
     COUNT(DISTINCT website_session_id) AS sessions, 
     SUM(price_usd)/COUNT(DISTINCT website_session_id) AS revenue_per_billing_page_seen
  FROM( 
-		-- this subquery provides billing page version and order price of each session and order respectively
-		SELECT 
-			website_pageviews.website_session_id, 
-			website_pageviews.pageview_url AS billing_version_seen, 
-			orders.order_id, 
-			orders.price_usd
-		FROM website_pageviews 
-			LEFT JOIN orders
-				ON orders.website_session_id = website_pageviews.website_session_id
-		WHERE website_pageviews.created_at > '2012-09-10' -- prescribed in assignment
-			AND website_pageviews.created_at < '2012-11-10' -- prescribed in assignment
-			AND website_pageviews.pageview_url IN ('/billing','/billing-2')
-	) AS billing_pageviews_and_order_data
+        -- this subquery provides billing page version and order price of each session and order respectively
+        SELECT 
+            website_pageviews.website_session_id, 
+            website_pageviews.pageview_url AS billing_version_seen, 
+            orders.order_id, 
+            orders.price_usd
+        FROM website_pageviews 
+            LEFT JOIN orders
+                ON orders.website_session_id = website_pageviews.website_session_id
+        WHERE website_pageviews.created_at > '2012-09-10' -- prescribed in assignment
+            AND website_pageviews.created_at < '2012-11-10' -- prescribed in assignment
+            AND website_pageviews.pageview_url IN ('/billing','/billing-2')
+    ) AS billing_pageviews_and_order_data
 GROUP BY billing_version_seen
 ;
 ~~~~
@@ -524,10 +524,10 @@ Count session id for all billing page versions for last month.
 
 ~~~~mysql
 SELECT 
-	COUNT(website_session_id) AS billing_sessions_past_month
+    COUNT(website_session_id) AS billing_sessions_past_month
 FROM website_pageviews 
 WHERE website_pageviews.pageview_url IN ('/billing','/billing-2') 
-	AND created_at BETWEEN '2012-10-27' AND '2012-11-27' -- past month
+    AND created_at BETWEEN '2012-10-27' AND '2012-11-27' -- past month
 ;
 ~~~~
 
